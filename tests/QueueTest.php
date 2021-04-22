@@ -30,10 +30,24 @@ class QueueTest extends TestCase
         $this->assertEquals("Q1", $item);
     }
 
-    public function testAnItemIsRemoveFormTheFrontOfTheQueue()
-    {
+    public function testAnItemIsRemoveFormTheFrontOfTheQueue() {
         $this->queue->push("Q1");
         $this->queue->push("Q2");
         $this->assertEquals("Q1", $this->queue->pop());
+    }
+
+    public function testMaxNumberOfItemsCanBeAdded() {
+        for ($i = 0; $i < Queue::MAX_ITEMS; $i++) {
+            $this->queue->push($i);
+        }
+        $this->assertEquals(Queue::MAX_ITEMS, $this->queue->getCount());
+    }
+
+    public function testExceptionThrowWhenAddingAnItemToFullQueue() {
+        $this->expectException(QueueException::class);
+        $this->expectExceptionMessage("Queue is full");
+        for ($i = 0; $i < Queue::MAX_ITEMS + 1; $i++) {
+            $this->queue->push($i);
+        }
     }
 }
