@@ -14,4 +14,17 @@ class OrderTest extends TestCase
         $order->amount = 200;
         $this->assertTrue($order->process());
     }
+
+    public function testOrderIsProcessUsingMockery()
+    {
+        $geteway = Mockery::mock('PaymentGeteway');
+        $geteway->shouldReceive('charge')
+                ->once()       
+                ->with(200)
+                ->andReturn(true);   
+        
+        $order = new Order($geteway);
+        $order->amount = 200;
+        $this->assertTrue($order->process());
+    }
 }
